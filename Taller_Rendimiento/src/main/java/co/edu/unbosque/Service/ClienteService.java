@@ -16,7 +16,7 @@ public class ClienteService {
 	public ClienteService() {
 		// TODO Auto-generated constructor stub
 	}
-	
+	// Model Mapping, para pasar el DTO, y usar la entidad
 	public List<ClienteEntity> listCustom() {
 		// TODO Auto-generated method stub
 		return clienteRepo.findAll();
