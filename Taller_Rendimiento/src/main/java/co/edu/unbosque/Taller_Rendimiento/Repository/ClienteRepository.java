@@ -1,8 +1,8 @@
-package co.edu.unbosque.Repository;
+package co.edu.unbosque.Taller_Rendimiento.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import co.edu.unbosque.Entidades.ClienteEntity;
+import co.edu.unbosque.Taller_Rendimiento.Entidades.ClienteEntity;
 
 public interface ClienteRepository extends JpaRepository<ClienteEntity, Long>{
 

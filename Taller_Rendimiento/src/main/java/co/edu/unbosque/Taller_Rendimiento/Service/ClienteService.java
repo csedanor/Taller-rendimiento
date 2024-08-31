@@ -1,12 +1,12 @@
-package co.edu.unbosque.Service;
+package co.edu.unbosque.Taller_Rendimiento.Service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.edu.unbosque.Entidades.ClienteEntity;
-import co.edu.unbosque.Repository.ClienteRepository;
+import co.edu.unbosque.Taller_Rendimiento.Entidades.ClienteEntity;
+import co.edu.unbosque.Taller_Rendimiento.Repository.ClienteRepository;
 
 @Service
 public class ClienteService {

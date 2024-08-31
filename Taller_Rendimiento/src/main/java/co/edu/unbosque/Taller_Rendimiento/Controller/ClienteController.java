@@ -1,4 +1,4 @@
-package co.edu.unbosque.Controller;
+package co.edu.unbosque.Taller_Rendimiento.Controller;
 
 import java.util.List;
 
@@ -8,24 +8,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.unbosque.Entidades.ClienteEntity;
-import co.edu.unbosque.Service.ClienteService;
+import co.edu.unbosque.Taller_Rendimiento.Entidades.ClienteEntity;
+import co.edu.unbosque.Taller_Rendimiento.Service.ClienteService;
 
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
 	@Autowired
 	private ClienteService cliente;
-
-	public ClienteController() {
-		// TODO Auto-generated constructor stub
-	}
 	
+	// Ya esto devuelve la lista de los clientes, pero aún falta mappear
     @GetMapping("/listar")
     public ResponseEntity<List<ClienteEntity>> listarClientes() {
         List<ClienteEntity> clientes = cliente.listCustom();
         return ResponseEntity.ok(clientes);
     }
+    // Este método es para probar si sirve la conexión entre postman y la app
+    @GetMapping("/ping")
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("pong");
+    }
+
 
 
 }

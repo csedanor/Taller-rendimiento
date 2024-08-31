@@ -1,4 +1,4 @@
-package co.edu.unbosque.DTO;
+package co.edu.unbosque.Taller_Rendimiento.DTO;
 
 public class ClienteDTO {
 	
