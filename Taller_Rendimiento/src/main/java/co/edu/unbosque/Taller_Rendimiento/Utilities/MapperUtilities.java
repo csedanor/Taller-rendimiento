@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 
 
 //Esto se hace para generalizar el mapeo que será utilizado para pasar de entidad a DTO 
-// El código lo tompe de https://www.baeldung.com/java-modelmapper-lists
+// El código lo tome de https://www.baeldung.com/java-modelmapper-lists
 public class MapperUtilities {
 	
 	private static final ModelMapper modelMapper = new ModelMapper();
@@ -17,5 +17,8 @@ public class MapperUtilities {
                      .map(element -> modelMapper.map(element, targetClass))
                      .collect(Collectors.toList());
     }
-
+    
+    public static <S, T> T mapearObjetos(S source, Class<T> targetClass) {
+        return modelMapper.map(source, targetClass);
+    }
 }

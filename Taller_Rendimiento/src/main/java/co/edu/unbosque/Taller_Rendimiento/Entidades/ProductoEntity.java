@@ -18,6 +18,8 @@ public class ProductoEntity {
 	private String nombre ;
 	@Column(name="descripcion")
 	private String descripcion;
+	@Column(name="stock")
+	private int stock;
 	@Column(name="precio")
 	private float precio;
 
@@ -26,7 +28,7 @@ public class ProductoEntity {
 	}
 	
 
-	public ProductoEntity(int idProducto, String nombre, String descripcion, float precio) {
+	public ProductoEntity(int idProducto, String nombre, String descripcion, int stock, float precio) {
 		super();
 		this.idProducto = idProducto;
 		this.nombre = nombre;
@@ -67,6 +69,13 @@ public class ProductoEntity {
 		this.precio = precio;
 	}
 	
-	
+	public int getStock() {
+		return stock;
+	}
+
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
 
 }

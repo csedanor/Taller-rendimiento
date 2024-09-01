@@ -19,7 +19,7 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepo; 
 	
-	ModelMapper mapper = new ModelMapper();
+	//ModelMapper mapper = new ModelMapper();
 	
 
 	// Model Mapping, para pasar el DTO, y usar la entidad

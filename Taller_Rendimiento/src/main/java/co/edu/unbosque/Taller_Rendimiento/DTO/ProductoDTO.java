@@ -1,7 +1,7 @@
 package co.edu.unbosque.Taller_Rendimiento.DTO;
 
 public class ProductoDTO {
-	private int idProducto;
+	private int idProducto, stock;
 	private String nombre, descripcion;
 	private float precio;
 
@@ -10,11 +10,12 @@ public class ProductoDTO {
 	}
 	
 
-	public ProductoDTO(int idProducto, String nombre, String descripcion, float precio) {
+	public ProductoDTO(int idProducto, String nombre, String descripcion,int stock , float precio) {
 		super();
 		this.idProducto = idProducto;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
+		this.stock = stock;
 		this.precio = precio;
 	}
 
@@ -49,6 +50,16 @@ public class ProductoDTO {
 
 	public void setPrecio(float precio) {
 		this.precio = precio;
+	}
+
+
+	public int getStock() {
+		return stock;
+	}
+
+
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 	
 	
