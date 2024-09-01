@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unbosque.Taller_Rendimiento.DTO.ClienteDTO;
 import co.edu.unbosque.Taller_Rendimiento.Entidades.ClienteEntity;
 import co.edu.unbosque.Taller_Rendimiento.Service.ClienteService;
 
@@ -19,8 +20,8 @@ public class ClienteController {
 	
 	// Ya esto devuelve la lista de los clientes, pero aún falta mappear
     @GetMapping("/listar")
-    public ResponseEntity<List<ClienteEntity>> listarClientes() {
-        List<ClienteEntity> clientes = cliente.listCustom();
+    public ResponseEntity<List<ClienteDTO>> listarClientes() {
+        List<ClienteDTO> clientes = cliente.listCustom();
         return ResponseEntity.ok(clientes);
     }
     // Este método es para probar si sirve la conexión entre postman y la app
@@ -28,6 +29,8 @@ public class ClienteController {
     public ResponseEntity<String> ping() {
         return ResponseEntity.ok("pong");
     }
+    
+    
 
 
 
