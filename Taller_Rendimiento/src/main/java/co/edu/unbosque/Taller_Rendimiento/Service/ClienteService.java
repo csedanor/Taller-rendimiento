@@ -34,5 +34,15 @@ public class ClienteService {
 //		// TODO Auto-generated method stub
 //		return clienteRepo.findAll();
 //	}
+	
+	public ClienteDTO obtenerCliente(Integer clienteId) {
+		ClienteEntity cliente = clienteRepo.findById(clienteId).orElse(null);
+        if (cliente == null) {
+            return null; 
+        }
+		return MapperUtilities.mapearObjetos(cliente, ClienteDTO.class);
+	}
+	
+	
 
 }

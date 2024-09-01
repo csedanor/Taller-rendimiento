@@ -15,10 +15,5 @@ public class DetallePedidoController {
 	@Autowired
 	private DetallePedidoService detalleService;
 
-    // Este método es para probar si sirve la conexión entre postman y la app
-    @GetMapping("/ping")
-    public ResponseEntity<String> ping() {
-        return ResponseEntity.ok("pong");
-    }
 
 }

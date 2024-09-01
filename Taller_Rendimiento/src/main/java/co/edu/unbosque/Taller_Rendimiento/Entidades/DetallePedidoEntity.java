@@ -12,6 +12,7 @@ public class DetallePedidoEntity {
 	@Id
 	@Column(name="producto_idproducto")
 	private int idProducto;
+	@Id
 	@Column(name="pedido_idpedido")
 	private int idPedido;
 	@Column(name="cantidad")
