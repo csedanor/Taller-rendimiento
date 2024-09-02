@@ -5,19 +5,25 @@ public class PedidoDTO {
 	private float total;
 	private String estado;
 
-	public PedidoDTO() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	
+	// Constructor por defecto
+    public PedidoDTO() {
+        this.estado = "Pendiente"; // Estado por defecto
+    }
 
-	public PedidoDTO(int idPedido, int idCliente, float total, String estado) {
-		super();
-		this.idPedido = idPedido;
-		this.idCliente = idCliente;
-		this.total = total;
-		this.estado = estado;
-	}
+    // Constructor con parámetros
+    public PedidoDTO(int idCliente, float total) {
+        this.idCliente = idCliente;
+        this.total = total;
+        this.estado = "Pendiente"; // Estado por defecto
+    }
+
+    // Constructor completo (con idPedido incluido)
+    public PedidoDTO(int idPedido, int idCliente, float total, String estado) {
+        this.idPedido = idPedido;
+        this.idCliente = idCliente;
+        this.total = total;
+        this.estado = estado;
+    }
 
 	public int getIdPedido() {
 		return idPedido;
