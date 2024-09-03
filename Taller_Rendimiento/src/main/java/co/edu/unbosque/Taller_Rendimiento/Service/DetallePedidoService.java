@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import co.edu.unbosque.Taller_Rendimiento.DTO.DetallePedidoDTO;
 import co.edu.unbosque.Taller_Rendimiento.DTO.ProductoDTO;
 import co.edu.unbosque.Taller_Rendimiento.Entidades.DetallePedidoEntity;
+import co.edu.unbosque.Taller_Rendimiento.Entidades.DetallePedidoID;
 import co.edu.unbosque.Taller_Rendimiento.Entidades.PedidoEntity;
 import co.edu.unbosque.Taller_Rendimiento.Entidades.ProductoEntity;
 import co.edu.unbosque.Taller_Rendimiento.Repository.DetallePedidoRepository;
 import co.edu.unbosque.Taller_Rendimiento.Utilities.MapperUtilities;
+import jakarta.transaction.Transactional;
 
 @Service
 public class DetallePedidoService {
@@ -22,33 +24,34 @@ public class DetallePedidoService {
 	@Autowired
 	private ProductoService productoService;
 	
-    public DetallePedidoDTO crearDetalle(PedidoEntity pedido, DetallePedidoDTO detalleDTO) {
-        
-    	// Obtener producto y validar stock/existencia del mismo
-        ProductoEntity producto = productoService.obtenerProductoEntity(detalleDTO.getIdProducto());
-        int validacionStock = productoService.validarStock(detalleDTO.getIdProducto(), detalleDTO.getCantidad());
-        
-        // si no existe algún producto, o no hay el stock, que tire la transacción
-        if (validacionStock != 1) {
-            return null;
+    @Transactional
+    public DetallePedidoDTO agregarDetallePedido(int idPedido, DetallePedidoDTO detalleDTO) throws Exception {
+        // Validar si el producto existe
+        ProductoEntity producto = productoService.obtenerProductoEntity(detalleDTO.getId().getIdPedido());
+
+
+        // Validar el stock del producto
+        int stockStatus = productoService.validarStock(detalleDTO.getId().getIdProducto(), detalleDTO.getCantidad());
+        if (stockStatus != 1) {
+            throw new Exception("Stock insuficiente o producto no encontrado.");
         }
 
+        // Crear el ID compuesto
+        DetallePedidoID detallePedidoID = new DetallePedidoID(detalleDTO.getId().getIdProducto(), idPedido);
+
         // Crear y guardar el detalle del pedido
-        DetallePedidoEntity detalle = new DetallePedidoEntity();
-        detalle.setIdPedido(pedido.getIdPedido());
-        detalle.setIdProducto(producto.getIdProducto());
-        detalle.setCantidad(detalleDTO.getCantidad());
-        detalle.setToralizado(producto.getPrecio() * detalleDTO.getCantidad());
+        DetallePedidoEntity detalleEntity = new DetallePedidoEntity();
+        detalleEntity.setId(detallePedidoID);
+        detalleEntity.setCantidad(detalleDTO.getCantidad());
+        detalleEntity.setToralizado(detalleDTO.getToralizado());
 
-        // Actualizar stock del producto
-        productoService.actualizarStock(detalleDTO.getIdProducto(), detalleDTO.getCantidad());
-        
-        // Guardar el detalle instanciado
-        detalleRepo.save(detalle);
+        DetallePedidoEntity detalleGuardado = detalleRepo.save(detalleEntity);
 
-        return MapperUtilities.mapearObjetos(detalle, DetallePedidoDTO.class);
+        // Actualizar el stock del producto
+        productoService.actualizarStock(detalleDTO.getId().getIdProducto(), detalleDTO.getCantidad());
+
+        // Mapear y devolver el DTO del detalle del pedido guardado
+        DetallePedidoDTO detalleGuardadoDTO = MapperUtilities.mapearObjetos(detalleGuardado, DetallePedidoDTO.class);
+        return detalleGuardadoDTO;
     }
-
-
-
 }

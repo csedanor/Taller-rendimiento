@@ -1,45 +1,31 @@
 package co.edu.unbosque.Taller_Rendimiento.DTO;
 
 public class DetallePedidoDTO {
-	private int idProducto, idPedido, cantidad;
+	
+	private DetallePedidoIdDTO id;
+	private int cantidad;
 	private float toralizado;
 	
 
 	public DetallePedidoDTO() {
 		// TODO Auto-generated constructor stub
 	}
-	
 
-
-	public DetallePedidoDTO(int idProducto, int idPedido, int cantidad, float toralizado) {
+	public DetallePedidoDTO(DetallePedidoIdDTO id, int cantidad, float toralizado) {
 		super();
-		this.idProducto = idProducto;
-		this.idPedido = idPedido;
+		this.id = id;
 		this.cantidad = cantidad;
 		this.toralizado = toralizado;
 	}
-
-
-
-	public int getIdProducto() {
-		return idProducto;
+	
+	
+	public DetallePedidoIdDTO getId() {
+		return id;
 	}
 
-
-	public void setIdProducto(int idProducto) {
-		this.idProducto = idProducto;
+	public void setId(DetallePedidoIdDTO id) {
+		this.id = id;
 	}
-
-
-	public int getIdPedido() {
-		return idPedido;
-	}
-
-
-	public void setIdPedido(int idPedido) {
-		this.idPedido = idPedido;
-	}
-
 
 	public int getCantidad() {
 		return cantidad;
