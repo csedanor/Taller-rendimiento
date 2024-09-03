@@ -4,6 +4,7 @@ import java.util.List;
 
 public class RequestOrderDTO {
 	
+	// Esta clase al final es lo que pediremos
 	private PedidoDTO pedidoDTO;
 	private List<DetallePedidoDTO> detalleDTO;
 	

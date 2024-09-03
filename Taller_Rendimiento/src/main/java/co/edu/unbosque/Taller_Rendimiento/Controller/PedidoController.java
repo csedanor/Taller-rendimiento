@@ -9,7 +9,7 @@ import co.edu.unbosque.Taller_Rendimiento.DTO.PedidoDTO;
 import co.edu.unbosque.Taller_Rendimiento.Service.PedidoService;
 
 @RestController
-@RequestMapping("/api/pedidos")
+@RequestMapping("/pedidos")
 public class PedidoController {
 
     @Autowired
