@@ -1,10 +1,10 @@
 package co.edu.unbosque.Taller_Rendimiento.DTO;
 
-public class TarejtaDTO {
+public class TarjetaDTO {
 	
 	private Long numero;
 	
-	public TarejtaDTO() {
+	public TarjetaDTO() {
 		// TODO Auto-generated constructor stub
 	}
 

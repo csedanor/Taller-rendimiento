@@ -7,19 +7,19 @@ public class RequestOrderDTO {
 	// Esta clase al final es lo que pediremos
 	private PedidoDTO pedidoDTO;
 	private List<DetallePedidoDTO> detalleDTO;
+	private TarjetaDTO tarjetaDTO;
 	
 	
 	public RequestOrderDTO() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
-
-
-	public RequestOrderDTO(PedidoDTO pedidoDTO, List<DetallePedidoDTO> detalleDTO) {
+	public RequestOrderDTO(PedidoDTO pedidoDTO, List<DetallePedidoDTO> detalleDTO,  TarjetaDTO tarjetaDTO) {
 		super();
 		this.pedidoDTO = pedidoDTO;
 		this.detalleDTO = detalleDTO;
+		this.tarjetaDTO = tarjetaDTO;
+	
 	}
 
 
@@ -39,12 +39,12 @@ public class RequestOrderDTO {
 		this.detalleDTO = detalleDTO;
 	}
 	
-	
 
-	
-	
-	
-	
-	
+    public TarjetaDTO getTarjetaDTO() {
+        return tarjetaDTO;
+    }
 
+    public void setTarjetaDTO(TarjetaDTO tarjetaDTO) {
+        this.tarjetaDTO = tarjetaDTO;
+    }
 }
