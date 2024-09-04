@@ -22,11 +22,34 @@ public class PedidoService {
 
     @Autowired
     private DetallePedidoService detallePedidoService;
+    
+    @Autowired
+    private ClienteService clienteService;
 
-    @Transactional
-    public PedidoDTO crearPedidoConDetalles(RequestOrderDTO requestOrderDTO) throws Exception {
+    
+    public void crearPedidoConDetalles(RequestOrderDTO requestOrderDTO) throws Exception {
+        int idPedido = requestOrderDTO.getPedidoDTO().getIdPedido();
+
+        float total = 0 ;
+        // Procesar detalles del pedido
+        List<DetallePedidoDTO> detallesDTO = requestOrderDTO.getDetalleDTO();
+        for (DetallePedidoDTO detalleDTO : detallesDTO) {
+            detallePedidoService.agregarDetallePedido(idPedido, detalleDTO);
+        }
+        // no sé como hacer que sumen los totales
+        //requestOrderDTO.getPedidoDTO().setTotal(total);
+
+        //return total;
+    }
+    
+    
+    public PedidoDTO crearOrden(PedidoDTO pedidoDTO) throws Exception {
+        // Validar si el cliente existe
+        if (clienteService.obtenerCliente(pedidoDTO.getIdCliente()) == null) {
+            throw new Exception("Cliente no encontrado");
+        }
+
         // Crear y guardar el pedido
-        PedidoDTO pedidoDTO = requestOrderDTO.getPedidoDTO();
         PedidoEntity pedidoEntity = new PedidoEntity();
         pedidoEntity.setIdCliente(pedidoDTO.getIdCliente());
         pedidoEntity.setTotal(pedidoDTO.getTotal());
@@ -34,19 +57,10 @@ public class PedidoService {
 
         PedidoEntity pedidoGuardado = pedidoRepository.save(pedidoEntity);
 
-        // Actualizar el DTO con el ID del pedido guardado
-        pedidoDTO.setIdPedido(pedidoGuardado.getIdPedido());
-        pedidoDTO.setEstado(pedidoGuardado.getEstado());
-
-        // Procesar detalles del pedido
-        List<DetallePedidoDTO> detallesDTO = requestOrderDTO.getDetalleDTO();
-        for (DetallePedidoDTO detalleDTO : detallesDTO) {
-            detallePedidoService.agregarDetallePedido(pedidoGuardado.getIdPedido(), detalleDTO);
-        }
-
-        return pedidoDTO;
+        // Mapear y devolver el DTO del pedido guardado
+        return MapperUtilities.mapearObjetos(pedidoGuardado, PedidoDTO.class);
     }
-
+    
     @Transactional
     public PedidoDTO procesarPedido(int idPedido) throws Exception {
         PedidoEntity pedidoEntity = pedidoRepository.findById(idPedido)
@@ -57,10 +71,14 @@ public class PedidoService {
         }
 
         pedidoEntity.setEstado("Confirmado");
+        
+        // Cuando cambie el estado, que guarde
         PedidoEntity pedidoGuardado = pedidoRepository.save(pedidoEntity);
 
         // Mapear y devolver el DTO del pedido guardado
         PedidoDTO pedidoGuardadoDTO = MapperUtilities.mapearObjetos(pedidoGuardado, PedidoDTO.class);
         return pedidoGuardadoDTO;
     }
+    
+    // detallePedidoEntity.setValorTotal(producto.getPrecio() * detallePedidoDTO.getCantidad());
 }

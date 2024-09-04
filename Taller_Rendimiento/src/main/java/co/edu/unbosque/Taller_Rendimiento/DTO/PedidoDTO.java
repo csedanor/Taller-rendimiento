@@ -4,6 +4,7 @@ public class PedidoDTO {
 	private int idPedido, idCliente;
 	private float total;
 	private String estado;
+	private Long numeroOrd;
 
 	// Constructor por defecto
     public PedidoDTO() {
@@ -18,11 +19,12 @@ public class PedidoDTO {
     }
 
     // Constructor completo (con idPedido incluido)
-    public PedidoDTO(int idPedido, int idCliente, float total, String estado) {
+    public PedidoDTO(int idPedido, int idCliente, float total, String estado, Long numeroOrd) {
         this.idPedido = idPedido;
         this.idCliente = idCliente;
         this.total = total;
         this.estado = estado;
+        this.numeroOrd = numeroOrd;
     }
 
 	public int getIdPedido() {
@@ -56,6 +58,14 @@ public class PedidoDTO {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+	public Long getNumeroOrd() {
+		return numeroOrd;
+	}
+
+	public void setNumeroOrd(Long numeroOrd) {
+		this.numeroOrd = numeroOrd;
+	}
+	
 	
 
 }

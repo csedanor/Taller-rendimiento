@@ -1,6 +1,5 @@
 package co.edu.unbosque.Taller_Rendimiento.Entidades;
 
-import co.edu.unbosque.Taller_Rendimiento.Controller.DetallePedidoController;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

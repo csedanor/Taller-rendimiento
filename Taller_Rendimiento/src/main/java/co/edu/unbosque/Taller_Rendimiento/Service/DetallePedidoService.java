@@ -24,15 +24,15 @@ public class DetallePedidoService {
 	@Autowired
 	private ProductoService productoService;
 	
-    @Transactional
+    
     public DetallePedidoDTO agregarDetallePedido(int idPedido, DetallePedidoDTO detalleDTO) throws Exception {
         // Validar si el producto existe
         ProductoEntity producto = productoService.obtenerProductoEntity(detalleDTO.getId().getIdPedido());
 
 
         // Validar el stock del producto
-        int stockStatus = productoService.validarStock(detalleDTO.getId().getIdProducto(), detalleDTO.getCantidad());
-        if (stockStatus != 1) {
+        boolean stockStatus = productoService.validarStock(detalleDTO.getId().getIdProducto(), detalleDTO.getCantidad());
+        if (stockStatus != true) {
             throw new Exception("Stock insuficiente o producto no encontrado.");
         }
 

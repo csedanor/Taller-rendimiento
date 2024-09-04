@@ -21,20 +21,23 @@ public class PedidoEntity {
 	private float total;
 	@Column(name="estado")
 	private String estado;
+	@Column(name="orden")
+	private Long numeroOrd;
 
 	public PedidoEntity() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	
-
-	public PedidoEntity(int idPedido, int idCliente, float total, String estado) {
+	public PedidoEntity(int idPedido, int idCliente, float total, String estado, Long numeroOrd) {
 		super();
 		this.idPedido = idPedido;
 		this.idCliente = idCliente;
 		this.total = total;
 		this.estado = estado;
+		this.numeroOrd = numeroOrd;
 	}
+
 
 	public int getIdPedido() {
 		return idPedido;
@@ -67,6 +70,18 @@ public class PedidoEntity {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+
+
+	public Long getNumeroOrd() {
+		return numeroOrd;
+	}
+
+
+	public void setNumeroOrd(Long numeroOrd) {
+		this.numeroOrd = numeroOrd;
+	}
+	
+	
 	
 
 }
