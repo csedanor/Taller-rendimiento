@@ -2,51 +2,52 @@ package co.edu.unbosque.Taller_Rendimiento.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.edu.unbosque.Taller_Rendimiento.DTO.DetallePedidoDTO;
 import co.edu.unbosque.Taller_Rendimiento.DTO.PedidoDTO;
 import co.edu.unbosque.Taller_Rendimiento.DTO.RequestOrderDTO;
 import co.edu.unbosque.Taller_Rendimiento.Entidades.PedidoEntity;
+import co.edu.unbosque.Taller_Rendimiento.Entidades.ProductoEntity;
 import co.edu.unbosque.Taller_Rendimiento.Repository.PedidoRepository;
 import co.edu.unbosque.Taller_Rendimiento.Utilities.MapperUtilities;
-import jakarta.transaction.Transactional;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class PedidoService {
 
-    @Autowired
-    private PedidoRepository pedidoRepository;
-
-    @Autowired
-    private DetallePedidoService detallePedidoService;
-    
-    @Autowired
-    private ClienteService clienteService;
-
-    @Autowired
-    private ProductoService productoService;
-    
+    private final PedidoRepository pedidoRepository;
+    private final DetallePedidoService detallePedidoService;
+    private final ClienteService clienteService;
+    private final ProductoService productoService;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    @Autowired
+    public PedidoService(PedidoRepository pedidoRepository, DetallePedidoService detallePedidoService,
+                         ClienteService clienteService, ProductoService productoService) {
+        this.pedidoRepository = pedidoRepository;
+        this.detallePedidoService = detallePedidoService;
+        this.clienteService = clienteService;
+        this.productoService = productoService;
+    }
+
+    @Transactional
     public PedidoDTO crearPedidoConDetalles(RequestOrderDTO requestOrderDTO) throws Exception {
         PedidoDTO pedidoDTO = requestOrderDTO.getPedidoDTO();
         List<DetallePedidoDTO> detallesDTO = requestOrderDTO.getDetalleDTO();
-        
+
         // Validar existencia de productos y cantidades
         for (DetallePedidoDTO detalleDTO : detallesDTO) {
-            if (productoService.obtenerProductoEntity(detalleDTO.getId().getIdProducto()) == null) {
-                // Producto no existe
+            ProductoEntity producto = productoService.obtenerProductoEntity(detalleDTO.getId().getIdProducto());
+            if (producto == null) {
                 throw new Exception("El producto con ID " + detalleDTO.getId().getIdProducto() + " no existe.");
             }
             if (detalleDTO.getCantidad() <= 0) {
-                // Cantidad no válida
                 throw new Exception("La cantidad para el producto con ID " + detalleDTO.getId().getIdProducto() + " debe ser mayor a 0.");
             }
         }
@@ -55,9 +56,10 @@ public class PedidoService {
         PedidoDTO pedidoCreado = crearOrden(pedidoDTO);
         int idPedido = pedidoCreado.getIdPedido();
         float total = 0;
-        
+
         for (DetallePedidoDTO detalleDTO : detallesDTO) {
-            detalleDTO.setToralizado(detalleDTO.getCantidad() * productoService.obtenerProductoEntity(detalleDTO.getId().getIdProducto()).getPrecio());
+            ProductoEntity producto = productoService.obtenerProductoEntity(detalleDTO.getId().getIdProducto());
+            detalleDTO.setToralizado(detalleDTO.getCantidad() * producto.getPrecio());
             DetallePedidoDTO detalleGuardadoDTO = detallePedidoService.agregarDetallePedido(idPedido, detalleDTO);
             total += detalleGuardadoDTO.getToralizado();
         }
@@ -78,7 +80,6 @@ public class PedidoService {
         scheduler.schedule(() -> {
             try {
                 PedidoDTO pedidoConfirmado = procesarPedido(idPedido);
-                // Lógica para mostrar el pedido confirmado en la respuesta si es necesario
                 System.out.println("Pedido confirmado: " + pedidoConfirmado);
             } catch (Exception e) {
                 System.err.println("Error al confirmar el pedido: " + e.getMessage());
