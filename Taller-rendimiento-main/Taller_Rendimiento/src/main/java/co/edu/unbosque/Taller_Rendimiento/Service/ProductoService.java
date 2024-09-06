@@ -14,6 +14,15 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Servicio para gestionar las operaciones relacionadas con productos en la entidad 
+ * {@code ProductoEntity}. Utiliza {@code ProductoRepository} para las operaciones de acceso 
+ * a datos y proporciona métodos para obtener y actualizar información de productos.
+
+ * El servicio está anotado con {@code @Service} y utiliza caché para optimizar la recuperación 
+ * de productos mediante la anotación {@code @Cacheable}. Los métodos que realizan cambios en la 
+ * base de datos están anotados con {@code @Transactional}.
+ */
 @Service
 public class ProductoService {
 

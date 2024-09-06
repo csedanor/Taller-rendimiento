@@ -18,6 +18,12 @@ import co.edu.unbosque.Taller_Rendimiento.Entidades.ProductoEntity;
 import co.edu.unbosque.Taller_Rendimiento.Repository.PedidoRepository;
 import co.edu.unbosque.Taller_Rendimiento.Utilities.MapperUtilities;
 
+/**
+ * Servicio para gestionar las operaciones relacionadas con pedidos en la entidad 
+ * {@code PedidoEntity}. Utiliza {@code PedidoRepository} para las operaciones de acceso 
+ * a datos y otros servicios para manejar la lógica de negocio relacionada con productos y clientes.
+ * El servicio está anotado con {@code @Service} y maneja transacciones con {@code @Transactional}.
+ */
 @Service
 public class PedidoService {
 
@@ -27,6 +33,14 @@ public class PedidoService {
     private final ProductoService productoService;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    /**
+     * Constructor de {@code PedidoService}.
+     * 
+     * @param pedidoRepository El repositorio de pedidos a ser utilizado por el servicio.
+     * @param detallePedidoService El servicio de detalles de pedidos a ser utilizado por el servicio.
+     * @param clienteService El servicio de clientes a ser utilizado por el servicio.
+     * @param productoService El servicio de productos a ser utilizado por el servicio.
+     */
     @Autowired
     public PedidoService(PedidoRepository pedidoRepository, DetallePedidoService detallePedidoService,
                          ClienteService clienteService, ProductoService productoService) {
@@ -36,12 +50,21 @@ public class PedidoService {
         this.productoService = productoService;
     }
 
+    /**
+     * Crea un pedido con sus detalles. Valida la existencia de productos y cantidades antes de 
+     * guardar el pedido y sus detalles. Luego, programa la confirmación del pedido con un retraso.
+     * 
+     * @param requestOrderDTO El objeto que contiene la información del pedido y los detalles.
+     * @return El pedido creado, representado por un {@code PedidoDTO}.
+     * @throws Exception Si ocurre un error durante la validación, la creación del pedido o el guardado 
+     *         de los detalles del pedido.
+     */
     @Transactional
     public PedidoDTO crearPedidoConDetalles(RequestOrderDTO requestOrderDTO) throws Exception {
         PedidoDTO pedidoDTO = requestOrderDTO.getPedidoDTO();
         List<DetallePedidoDTO> detallesDTO = requestOrderDTO.getDetalleDTO();
 
-        // Validar existencia de productos y cantidades
+ 
         for (DetallePedidoDTO detalleDTO : detallesDTO) {
             ProductoEntity producto = productoService.obtenerProductoEntity(detalleDTO.getId().getIdProducto());
             if (producto == null) {
@@ -52,7 +75,6 @@ public class PedidoService {
             }
         }
 
-        // Crear y guardar el pedido para obtener el ID generado
         PedidoDTO pedidoCreado = crearOrden(pedidoDTO);
         int idPedido = pedidoCreado.getIdPedido();
         float total = 0;
@@ -64,18 +86,20 @@ public class PedidoService {
             total += detalleGuardadoDTO.getToralizado();
         }
 
-        // Actualizar el total del pedido y el número de tarjeta
         pedidoCreado.setTotal(total);
         pedidoCreado.setnumeroTarjeta(pedidoDTO.getnumeroTarjeta());
         pedidoRepository.save(MapperUtilities.mapearObjetos(pedidoCreado, PedidoEntity.class));
 
-        // Programar la confirmación del pedido
         scheduleOrderConfirmation(idPedido);
 
         return pedidoCreado;
     }
 
-    // Método para confirmar un pedido después de un retraso
+    /**
+     * Programa la confirmación de un pedido después de un retraso de 3 segundos.
+     * 
+     * @param idPedido El ID del pedido a confirmar.
+     */
     private void scheduleOrderConfirmation(int idPedido) {
         scheduler.schedule(() -> {
             try {
@@ -87,6 +111,13 @@ public class PedidoService {
         }, 3, TimeUnit.SECONDS); // 3 segundos de retraso
     }
 
+    /**
+     * Crea una orden de pedido y la guarda en la base de datos.
+     * 
+     * @param pedidoDTO El objeto que contiene la información del pedido a crear.
+     * @return El pedido creado, representado por un {@code PedidoDTO}.
+     * @throws Exception Si el cliente asociado al pedido no se encuentra.
+     */
     public PedidoDTO crearOrden(PedidoDTO pedidoDTO) throws Exception {
         if (clienteService.obtenerCliente(pedidoDTO.getIdCliente()) == null) {
             throw new Exception("Cliente no encontrado");
@@ -102,6 +133,13 @@ public class PedidoService {
         return MapperUtilities.mapearObjetos(pedidoGuardado, PedidoDTO.class);
     }
 
+    /**
+     * Procesa un pedido existente, cambiando su estado a "Confirmado".
+     * 
+     * @param idPedido El ID del pedido a procesar.
+     * @return El pedido procesado, representado por un {@code PedidoDTO}.
+     * @throws Exception Si el pedido no se encuentra o si el estado del pedido no es "Pendiente".
+     */
     @Transactional
     public PedidoDTO procesarPedido(int idPedido) throws Exception {
         PedidoEntity pedidoEntity = pedidoRepository.findById(idPedido)

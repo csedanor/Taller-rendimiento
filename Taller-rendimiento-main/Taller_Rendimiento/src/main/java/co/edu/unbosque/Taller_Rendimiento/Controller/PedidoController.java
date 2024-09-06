@@ -1,6 +1,7 @@
 package co.edu.unbosque.Taller_Rendimiento.Controller;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,12 @@ import co.edu.unbosque.Taller_Rendimiento.DTO.DetallePedidoIdDTO;
 import co.edu.unbosque.Taller_Rendimiento.DTO.PedidoDTO;
 import co.edu.unbosque.Taller_Rendimiento.DTO.RequestOrderDTO;
 import co.edu.unbosque.Taller_Rendimiento.Service.PedidoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 
 @RestController
@@ -23,6 +30,15 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
+    
+    @Operation(summary = "Crear un nuevo pedido con detalles")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Pedido creado exitosamente", 
+            content = { @Content(mediaType = "application/json", 
+            schema = @Schema(implementation = PedidoDTO.class)) }),
+        @ApiResponse(responseCode = "400", description = "Error en la creación del pedido",
+            content = @Content)
+    })
     
     @PostMapping("/procesar")
     public ResponseEntity<?> crearPedidoConDetalles(
